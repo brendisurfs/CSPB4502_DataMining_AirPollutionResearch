@@ -1,0 +1,52 @@
+# - https://www.postech.ac.kr/eng/research/research_results.do?mode=view&articleNo=18646&title=Is+Air+Pollution+Exposure+Equal+Across+South+Korea%3F+
+# - https://pmc.ncbi.nlm.nih.gov/articles/PMC4199289/
+# - https://ehp.niehs.nih.gov/doi/10.1289/isee.2023.OP-019
+#
+
+airqualitytrends20152025:
+  type: Article
+  author:  [
+    Oak Y. J.,
+    Jacob D. J.,
+    Pendergrass D. C.,
+    Dang R., 
+    Colombi N. K., 
+    Chong H., 
+    Lee S., 
+    Kuk S. K., 
+    Kim J.
+  ]
+  title: Air quality trends and regimes in South Korea inferred from 2015–2023 surface and satellite observations
+  url: https://acp.copernicus.org/articles/25/3233/2025/
+  date: 2025-3-17
+  keywords: Atmos. Chem. Phys.
+  pages: 3233–3252
+
+
+
+isairpolequalsk:
+  type: Article
+  title: Is Air Pollution Exposure Equal Across South Korea?
+  author: [Kim N. R., Hyung J. L.]
+  url: https://www.postech.ac.kr/eng/research/research_results.do?mode=view&articleNo=18646&title=Is+Air+Pollution+Exposure+Equal+Across+South+Korea%3F+
+  keywords: Air Quality Management, High-Resolution Air Pollution, NO2 Exposure
+  date: 2025-2-13
+  doi: https://pubs.acs.org/doi/10.1021/acs.est.4c10996
+
+
+
+aq_policy_sk:
+  type: Article
+  title: "Applying policy and health effects of air pollution in South Korea: focus on ambient air quality standards"
+  author: [Jongsik Ha]
+  url: https://pmc.ncbi.nlm.nih.gov/articles/PMC4199289/
+  date: 2014-10-1
+  doi: https://www.eaht.org/journal/view.php?doi=10.5620/eht.e2014011
+
+pm25_ml_nih:
+  type: Article
+  title: "Effects of long-term exposure to air pollution on all-cause and cause-specific mortality in South Korea"
+  author: [Jeongmin Moon, Ejin Kim, Aims Create Team, Whanhee Lee, and Ho Kim]
+  url: https://ehp.niehs.nih.gov/doi/10.1289/isee.2023.OP-019
+  date: 2023-9-17
+  doi: https://doi.org/10.1289/isee.2023.OP-019
