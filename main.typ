@@ -216,10 +216,50 @@ the main focus will be on the measurement date, latitude, longitutde, and the pa
 We don't require the sensor address for now, and will be filtering out any sensors that have abnormal codes.
 We will also be using mean averaging for filling in missing or NaN numeric values, and filtering out full rows with NaN values that aren't numeric. 
 This ensures no data is empty, causing a skew in results or errors while iterating through the code. 
+During preprocessing, it is also important to figure out common functions for processing data, and document them appropriately.
 
 == Evaluation Methods
-Evaluating the data for this project will use a standard supervised learning / classification model to determine which times of the year produce certain combinations of air pollution particles. 
+Evaluation methods for this study have evolved over the course of investigating the data and researching more about the domain. 
+Evaluating the data for this project originally was planned to use a standard supervised learning / classification model to determine which times of the year produce certain combinations of air pollution particles. 
 This reduces the the need for external datasets, such as economic information or political changes. While these datasets could be useful, to reduce the scope of the project, we will isolate to pure sensor readings for now.
+While this method of evaluation is still the ultimate goal, I organized a few fundamental evaluation methods to find patterns. 
+
+=== Chemical Compound Correlation 
+The first method used is a simple correlation method between the chemical compounds emitted. 
+#figure(
+  caption: [Chemical Compound Correlations],
+  placement: top,
+  table(
+    columns: 6,
+    stroke: 0.5pt,
+    align: center,
+    inset: (x: 8pt, y: 4pt),
+    fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0  { rgb("#efefef") },
+    
+    // Header row
+    table.header(
+      [*SO2*], [*NO2*], [*O3*], [*CO*], [*PM10*], [*PM2.5*]
+    ),
+    
+    // Data rows
+    [1.0],   [0.866], [0.692],  [0.258],  [0.043], [0.051],
+    [0.866], [1.0],   [0.665],  [0.087],  [0.039], [0.045],
+    [0.692], [0.665], [1.0],    [-0.064], [0.003], [-0.002],
+    [0.258], [0.087], [-0.064], [1.0],    [0.143], [0.178],
+    [0.043], [0.039], [0.003],  [0.143],  [1.0],   [0.225],
+    [0.051], [0.045], [-0.002], [0.178],  [0.225], [1.0],
+  )
+)<tab:chemical_correlation>
+
+In @tab:chemical_correlation, we see that #sulfer_dioxide and #nitrogen_dioxide share a strong correlation, with #ozone following somewhat closely. 
+What was surprising was that #sulfer_dioxide and #nitrogen_dioxide are the only chemical compounds that do not have any negative correlations,
+showing that with an increase of those chemical compounds, all other chemical compounds raise a certain amount. 
+Continuing on our observation with the other compounds, none have a drastic negative relation. With my current level of domain specific understanding, 
+I cannot conclude that this change is significant enough to warrant further study, or if it can be written off as potential external interference (weather, production region changing production, etc.).
+
+
+
+
 
 
 == Tools and Technologies
