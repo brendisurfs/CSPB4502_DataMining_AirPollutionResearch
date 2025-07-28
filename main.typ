@@ -86,7 +86,7 @@ My girlfriend at the time of writing this paper is in South Korea, giving me the
 
 == Paper overview
 In this paper I will explore air pollution in South Korea, how it changes throughout the year, and potential various prediction methods to predict impact as the year moves.
-By utilizing various data mining techniques and methods, we will infer whether different kind of pollution can be predicted and offset during different times of the year. 
+By utilizing common data mining techniques such as clustering, correlation analysis, and linear regression, we will infer whether different kind of pollution can be predicted and offset during different times of the year. 
 
 @isairpolequalsk
 
