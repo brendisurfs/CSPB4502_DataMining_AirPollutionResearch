@@ -28,3 +28,12 @@ suggesting not just small pockets are affected.
 - Added mean fill method for Null values, removed all NaN values. 
 - Documented functions.
 
+
+# Evaluation Steps
+
+- Correlation Analysis
+- Outlier Detection
+    - IQR method sto calculate outliers. 
+    - Found that somewhat few outlier events 
+    - For the large chemical compounds, 
+- Temporal Analysis

@@ -231,9 +231,9 @@ The first method used is a simple correlation method between the chemical compou
   placement: top,
   table(
     columns: 6,
-    stroke: 0.5pt,
     align: center,
     inset: (x: 8pt, y: 4pt),
+    stroke: (x, y) => if y <= 1 { (top: 0.5pt) },
     fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0  { rgb("#efefef") },
     
     // Header row
@@ -251,14 +251,42 @@ The first method used is a simple correlation method between the chemical compou
   )
 )<tab:chemical_correlation>
 
-In @tab:chemical_correlation, we see that #sulfer_dioxide and #nitrogen_dioxide share a strong correlation, with #ozone following somewhat closely. 
+In @tab:chemical_correlation, we see that #sulfer_dioxide and #nitrogen_dioxide share a strong correlation coefficient, with #ozone following somewhat closely. 
 What was surprising was that #sulfer_dioxide and #nitrogen_dioxide are the only chemical compounds that do not have any negative correlations,
 showing that with an increase of those chemical compounds, all other chemical compounds raise a certain amount. 
-Continuing on our observation with the other compounds, none have a drastic negative relation. With my current level of domain specific understanding, 
-I cannot conclude that this change is significant enough to warrant further study, or if it can be written off as potential external interference (weather, production region changing production, etc.).
+This shows us that the contributors to the three chemical compounds #nitrogen_dioxide, #sulfer_dioxide, and #ozone, do not contribute to particulate material pollution. 
+
+Continuing on our observation with the other compounds, none have a drastic negative correlation coefficient. 
+Our largest observed negative correlation coefficient is -0.064, which, looking at a graph of the data points, does not seem to indicate a strong correlation either way. 
 
 
+=== Statistical Outliers
+Next, I looked at outliers within the data. 
 
+#figure(
+  caption: [Compound Frequency and Outliers],
+  placement: top,
+  table(
+  columns: 4,
+    align: center,
+    inset: (x: 8pt, y: 4pt),
+    stroke: (x, y) => if y <= 1 { (top: 0.5pt) },
+    fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0  { rgb("#efefef") },
+  
+  // Header row
+  table.header(
+    [*Name*], [*Freq.*], [*Mean Sev.*], [*Std Sev.*]
+  ),
+  
+  // Data rows
+  [SO2],   [13,799], [2.942], [25.207],
+  [CO],    [63,720], [1.066], [4.709],
+  [PM10],  [30,185], [2.7],   [9.048],
+  [O3],    [12,936], [1.651], [15.63],
+  [PM2.5], [34,411], [2.639], [8.419],
+  [NO2],   [8,811],  [1.145], [26.595],
+)
+)<tab:outliers>
 
 
 
