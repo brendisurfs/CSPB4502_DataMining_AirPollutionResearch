@@ -178,19 +178,19 @@ The dataset provides useful attributes to improve our study.
       - The longitude of the sensors location.
     ],
     [#ozone], [
-      - Ozone concentration in the sensor reading. 
+      - Ozone concentration. 
       - Measured in *ppm*.
     ],
     [#carbon_monoxide], [
-      - Carbon Monoxide concentration in the sensor reading. 
+      - Carbon Monoxide concentration. 
       - Measured in *ppm*.
     ],
     [#sulfer_dioxide], [
-      - Sulfur Dioxide concentration in the sensor reading. 
+      - Sulfur Dioxide concentration. 
       - Measured in *ppm*.
     ],
     [#nitrogen_dioxide], [
-      - Nitrogen Dioxide concentration in the sensor reading. 
+      - Nitrogen Dioxide concentration. 
       - Measured in *ppm*.
     ],
     [#pm10], [
@@ -236,12 +236,10 @@ The first method used is a simple correlation method between the chemical compou
     stroke: (x, y) => if y <= 1 { (top: 0.5pt) },
     fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0  { rgb("#efefef") },
     
-    // Header row
     table.header(
       [*SO2*], [*NO2*], [*O3*], [*CO*], [*PM10*], [*PM2.5*]
     ),
     
-    // Data rows
     [1.0],   [0.866], [0.692],  [0.258],  [0.043], [0.051],
     [0.866], [1.0],   [0.665],  [0.087],  [0.039], [0.045],
     [0.692], [0.665], [1.0],    [-0.064], [0.003], [-0.002],
@@ -249,45 +247,71 @@ The first method used is a simple correlation method between the chemical compou
     [0.043], [0.039], [0.003],  [0.143],  [1.0],   [0.225],
     [0.051], [0.045], [-0.002], [0.178],  [0.225], [1.0],
   )
-)<tab:chemical_correlation>
+) <tab:chemical_correlation>
 
 In @tab:chemical_correlation, we see that #sulfer_dioxide and #nitrogen_dioxide share a strong correlation coefficient, with #ozone following somewhat closely. 
 What was surprising was that #sulfer_dioxide and #nitrogen_dioxide are the only chemical compounds that do not have any negative correlations,
 showing that with an increase of those chemical compounds, all other chemical compounds raise a certain amount. 
 This shows us that the contributors to the three chemical compounds #nitrogen_dioxide, #sulfer_dioxide, and #ozone, do not contribute to particulate material pollution. 
-
 Continuing on our observation with the other compounds, none have a drastic negative correlation coefficient. 
 Our largest observed negative correlation coefficient is -0.064, which, looking at a graph of the data points, does not seem to indicate a strong correlation either way. 
 
 
+#figure(
+  caption: [Compound Correlation Heatmap],
+  placement: top,
+  image("Figure_1.png")
+) <fig:heatmap>
+
+@fig:heatmap shows the correlation distribution across each chemical compound, and its positive correlation coefficient. 
+The code used to calculate this was straight forward: 
+
+```python
+  particle_corr = df.drop([DATE, STATION_CODE, LATITUDE, LONGITUDE]).corr().select(pl.col(pl.Float64).round(3))
+```
+This makes use of Polars excellent expression library and fully typed methods. 
+We can run an expression across all fields that match the type Float64 and rounding those values to three decimal places for easier reading.
+
 === Statistical Outliers
 Next, I looked at outliers within the data. 
+I took the frequency of each compounds outlier, with it's mean and standard deviation value.
+The total number of outliers was *163,862*, or about *25.636%* of the total rows in the dataset.
 
-#figure(
-  caption: [Compound Frequency and Outliers],
-  placement: top,
-  table(
-  columns: 4,
-    align: center,
-    inset: (x: 8pt, y: 4pt),
-    stroke: (x, y) => if y <= 1 { (top: 0.5pt) },
-    fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0  { rgb("#efefef") },
-  
-  // Header row
-  table.header(
-    [*Name*], [*Freq.*], [*Mean Sev.*], [*Std Sev.*]
-  ),
-  
-  // Data rows
-  [SO2],   [13,799], [2.942], [25.207],
-  [CO],    [63,720], [1.066], [4.709],
-  [PM10],  [30,185], [2.7],   [9.048],
-  [O3],    [12,936], [1.651], [15.63],
-  [PM2.5], [34,411], [2.639], [8.419],
-  [NO2],   [8,811],  [1.145], [26.595],
-)
-)<tab:outliers>
+  #figure(
+    caption: [Compound Frequency and Outliers],
+    placement: top,
+    table(
+      columns: 4,
+      align: center,
+      inset: (x: 8pt, y: 4pt),
+      stroke: (x, y) => if y <= 1 { (top: 0.5pt) },
+      fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0  { rgb("#efefef") },
 
+      table.header(
+        [*Name*], [*Freq.*], [*Mean Sev.*], [*Std Sev.*]
+      ),
+
+      [SO2],   [13,799], [2.942], [25.207],
+      [CO],    [63,720], [1.066], [4.709],
+      [PM10],  [30,185], [2.7],   [9.048],
+      [O3],    [12,936], [1.651], [15.63],
+      [PM2.5], [34,411], [2.639], [8.419],
+      [NO2],   [8,811],  [1.145], [26.595],
+    )
+  ) <tab:outliers>
+
+@tab:outliers shows the distribution of outliers for each chemical compound, with the modal class being #carbon_monoxide.
+
+The code to analyze and display the outliers is as follows: 
+```python
+  outlier_df = detect_compound_outliers(df, compound_list)
+  compound_outliers_df = aggregate_outliers(outlier_df, compound_list)
+  outlier_clusters = cluster_outlier_frequency_severity(compound_outliers_df)
+  total_outliers = outlier_clusters.select(pl.col("frequency").sum())
+```
+We have the functions *detect_compound_outliers* and *aggregate_outliers* filtering and organizing outlier data, 
+and *cluster_outlier_frequency_severity* groups each outlier by chemical compound.
+By printing *outlier_clusters*, a DataFrame object, we are able to see @tab:outliers.
 
 
 == Tools and Technologies
@@ -295,13 +319,31 @@ The tools used in this project are mostly tried-and-true tools used in the Data 
 
 The language of choice for extracting, transforming, and loading the data is Python, due to its extensive libraries and ease of use. 
 The trade off with Python is that it is dynamically typed, which slows the iteration process as the project grows. 
+However, for this project, the scope is maintainable and relatively small compared to a larger, multi-person project. 
 
 Handling DataFrame processing, I decided to use the Polars library. An alternative to Pandas, it is arguably faster than Pandas in certain areas, is type safe, and has a unique way of forming transformation expressions. 
 I have used it in the past, and feel more comfortable with it and it's clear, detailed documentation.
+Polars allows the user to create complex aggregation logic using their built-in DSL-like expressions. 
+For example, take this clustering method: 
+```python
+def cluster_outlier_frequency_severity(df: pl.DataFrame) -> pl.DataFrame:
+    return df.group_by("compound_name").agg([
+        pl.len().alias("frequency"),
+        pl.col("outlier_severity").mean().alias("mean_severity").round(3),
+        pl.col("outlier_severity").std().alias("std_severity").round(3),
+    ])
+```
 
-For displaying data, I have chosen Matplotlib. Matplotlib is a classic library, and it made no sense to try and find another.
+*pl.col* is part of Polars expression library, which is run through their expression engine behind the scenes. 
+This allows for performance improvements over Pandas, as well as a cleaner,typed, and more consistent syntax.
+
+For displaying data, I have chosen Matplotlib and Seaborn. Matplotlib is a classic library, providing easy access to displaying clean graphs of all kinds. 
+Seaborn is a new library I found about, and it is useful for creating heat maps. Heat maps have been helpful in visualizing correlation between chemical compounds, as shown above. 
 
 For writing reports and this project proposal, I am using Typst in place of LaTeX, for easier iteration and faster compile times. 
+Typst is a fantastic progression in the world of typing systems, with useful features, a straight forward syntax, and excellent documentation. 
+It's compiler is much faster than LaTeX, and its tooling is all encapsulated in one binary. This allows it's ecosystem to be consistent across platforms.
+
 
 #bibliography("literature.yml", title: "References", style: "institute-of-electrical-and-electronics-engineers")
 

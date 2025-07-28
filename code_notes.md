@@ -35,5 +35,6 @@ suggesting not just small pockets are affected.
 - Outlier Detection
     - IQR method sto calculate outliers. 
     - Found that somewhat few outlier events 
-    - For the large chemical compounds, 
+    - For the large chemical compounds
+    - Total outliers: 163862
 - Temporal Analysis
